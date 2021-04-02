@@ -10,5 +10,5 @@ type PolySerializer interface {
 //
 // Note: This deserializer always returns struct pointers rather than struct values.
 type PolyDeserializer interface {
-	PolyDeserializer(data []byte) (res interface{}, err error)
+	PolyDeserialize(data []byte) (res interface{}, err error)
 }

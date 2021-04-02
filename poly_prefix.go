@@ -40,7 +40,7 @@ func (pps *PrefixPolySerializer) PolySerialize(data interface{}) (res []byte, er
 	return
 }
 
-func (pps *PrefixPolySerializer) PolyDeserializer(data []byte) (res interface{}, err error) {
+func (pps *PrefixPolySerializer) PolyDeserialize(data []byte) (res interface{}, err error) {
 	const MaxInt = int(^uint(0) >> 1)
 
 	rd := bytes.NewReader(data)
@@ -56,7 +56,7 @@ func (pps *PrefixPolySerializer) PolyDeserializer(data []byte) (res interface{},
 	tagData := data[sizeSize : sizeSize+int(sz)]
 	serializedData := data[sizeSize+int(sz):]
 
-	tag, err := pps.TypeTagDeserializer.PolyDeserializer(tagData)
+	tag, err := pps.TypeTagDeserializer.PolyDeserialize(tagData)
 	if err != nil {
 		return
 	}
