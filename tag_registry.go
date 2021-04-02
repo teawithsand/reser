@@ -6,16 +6,16 @@ import "reflect"
 type TagTypeResgistry struct {
 	tagType reflect.Type
 
-	registeredTypes        map[TypeTag]reflect.Type
-	reverseRegisteredTypes map[reflect.Type]TypeTag
+	tagToType map[TypeTag]reflect.Type
+	typeToTag map[reflect.Type]TypeTag
 }
 
 // NewTagTypeResgistry creates new tag type registry accepting tags with specified type.
 func NewTagTypeResgistry(tagType reflect.Type) *TagTypeResgistry {
 	return &TagTypeResgistry{
-		tagType:                tagType,
-		registeredTypes:        map[TypeTag]reflect.Type{},
-		reverseRegisteredTypes: map[reflect.Type]TypeTag{},
+		tagType:   tagType,
+		tagToType: map[TypeTag]reflect.Type{},
+		typeToTag: map[reflect.Type]TypeTag{},
 	}
 }
 
@@ -40,15 +40,16 @@ func (ttr *TagTypeResgistry) RegisterType(ty reflect.Type, et TypeTag) (err erro
 		}
 		return
 	}
-
-	if ttr.registeredTypes == nil {
-		ttr.registeredTypes = map[TypeTag]reflect.Type{}
-	}
-	if ttr.reverseRegisteredTypes == nil {
-		ttr.reverseRegisteredTypes = map[reflect.Type]TypeTag{}
-	}
-
-	_, ok := ttr.registeredTypes[et]
+	// with constructor this should never happen
+	/*
+		if ttr.registeredTypes == nil {
+			ttr.registeredTypes = map[TypeTag]reflect.Type{}
+		}
+		if ttr.reverseRegisteredTypes == nil {
+			ttr.reverseRegisteredTypes = map[reflect.Type]TypeTag{}
+		}
+	*/
+	_, ok := ttr.tagToType[et]
 	if ok {
 		err = &TagRegisterError{
 			Type:    ty,
@@ -56,7 +57,7 @@ func (ttr *TagTypeResgistry) RegisterType(ty reflect.Type, et TypeTag) (err erro
 		}
 		return
 	}
-	_, ok = ttr.reverseRegisteredTypes[ty]
+	_, ok = ttr.typeToTag[ty]
 	if ok {
 		err = &TagRegisterError{
 			Type:    ty,
@@ -65,21 +66,21 @@ func (ttr *TagTypeResgistry) RegisterType(ty reflect.Type, et TypeTag) (err erro
 		return
 	}
 
-	ttr.registeredTypes[et] = ty
-	ttr.reverseRegisteredTypes[ty] = et
+	ttr.tagToType[et] = ty
+	ttr.typeToTag[ty] = et
 
 	return
 }
 
 func (ttr *TagTypeResgistry) GetTag(ty reflect.Type) (tt TypeTag, err error) {
-	if ttr.registeredTypes == nil {
+	if ttr.tagToType == nil {
 		err = &TagNotFoundError{
 			Type: ty,
 		}
 		return
 	}
 
-	tt, ok := ttr.registeredTypes[ty]
+	tt, ok := ttr.typeToTag[ty]
 	if !ok {
 		// TODO(teaiwthsand): better error
 		err = &TagNotFoundError{
@@ -91,14 +92,14 @@ func (ttr *TagTypeResgistry) GetTag(ty reflect.Type) (tt TypeTag, err error) {
 }
 
 func (ttr *TagTypeResgistry) GetType(tt TypeTag) (ty reflect.Type, err error) {
-	if ttr.registeredTypes == nil {
+	if ttr.tagToType == nil {
 		err = &TypeNotFoundError{
 			TypeTag: tt,
 		}
 		return
 	}
 
-	tt, ok := ttr.registeredTypes[ty]
+	ty, ok := ttr.tagToType[tt]
 	if !ok {
 		err = &TypeNotFoundError{
 			TypeTag: tt,
