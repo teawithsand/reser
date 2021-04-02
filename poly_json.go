@@ -16,7 +16,7 @@ import (
 type ETPolySerializer struct {
 	Serializer       Serializer
 	Deserializer     Deserializer
-	TagTypeResgistry TagTypeResgistry
+	TagTypeResgistry *TagTypeResgistry
 }
 
 func (ets *ETPolySerializer) PolySerialize(data interface{}) (res []byte, err error) {

@@ -16,7 +16,7 @@ type TypeNotFoundError struct {
 }
 
 func (e *TypeNotFoundError) Error() string {
-	return "specified type tag was not found"
+	return "type for specified tag was not found"
 }
 
 type TagNotFoundError struct {
@@ -24,7 +24,7 @@ type TagNotFoundError struct {
 }
 
 func (e *TagNotFoundError) Error() string {
-	return "specified type was not found"
+	return "tag for specified type was not found"
 }
 
 type TypeTagTypeError struct {
