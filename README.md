@@ -10,5 +10,5 @@ It's very simplistic and does not implement any serialization format on it's own
 
 It also simplifies doing lots of amazing things like integrating ZSTD dictionary compression directly into serializer/deserializer function.
 
-* Examples 
+## Examples 
 See docs and examples files.
