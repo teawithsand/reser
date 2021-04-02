@@ -42,7 +42,7 @@ func Test_ETPolySerializer_CanSerializeDeserialize(t *testing.T) {
 		return
 	}
 
-	res, err := s.PolyDeserializer(data)
+	res, err := s.PolyDeserialize(data)
 	if err != nil {
 		t.Error(err)
 		return

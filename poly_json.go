@@ -34,7 +34,7 @@ func (ets *ETPolySerializer) PolySerialize(data interface{}) (res []byte, err er
 	})
 }
 
-func (ets *ETPolySerializer) PolyDeserializer(data []byte) (res interface{}, err error) {
+func (ets *ETPolySerializer) PolyDeserialize(data []byte) (res interface{}, err error) {
 	ttt := ets.TagTypeResgistry.GetTypeTagType()
 	var tagContainerType tagContainer
 	if ttt.Kind() == reflect.Struct {
