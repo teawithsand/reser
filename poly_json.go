@@ -95,6 +95,6 @@ func (ets *ETPolySerializer) PolyDeserialize(data []byte) (res interface{}, err 
 	if err != nil {
 		return
 	}
-	res = resContainer.Data
+	res = reflect.ValueOf(resContainer.Data).Elem().Interface()
 	return
 }

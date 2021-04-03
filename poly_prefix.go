@@ -60,9 +60,10 @@ func (pps *PrefixPolySerializer) PolyDeserialize(data []byte) (res interface{}, 
 	if err != nil {
 		return
 	}
-	res, err = pps.DataDeserializer.Deserialize(serializedData, tag)
+	rawRes, err := pps.DataDeserializer.Deserialize(serializedData, tag)
 	if err != nil {
 		return
 	}
+	res = rawRes
 	return
 }

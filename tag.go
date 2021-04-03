@@ -43,7 +43,7 @@ func (ds *DefaultTagSerializer) Serialize(event interface{}) (res []byte, err er
 	return f.Serialize(event)
 }
 
-func (ds *DefaultTagSerializer) Deserialize(data []byte, tt TypeTag) (event interface{}, err error) {
+func (ds *DefaultTagSerializer) Deserialize(data []byte, tt TypeTag) (res interface{}, err error) {
 	f := ds.Deserializer
 
 	ty, err := ds.TagTypeResgistry.GetType(tt)
@@ -51,7 +51,11 @@ func (ds *DefaultTagSerializer) Deserialize(data []byte, tt TypeTag) (event inte
 		return
 	}
 
-	event = reflect.New(ty).Interface()
-	err = f.Deserialize(data, event)
+	rawRes := reflect.New(ty).Interface()
+	err = f.Deserialize(data, rawRes)
+	if err != nil {
+		return
+	}
+	res = reflect.ValueOf(rawRes).Elem().Interface()
 	return
 }

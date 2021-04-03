@@ -10,34 +10,37 @@ type STPolySerializer struct {
 }
 
 func (ser *STPolySerializer) PolySerialize(data interface{}) (res []byte, err error) {
-	typeValid := false
-	if data != nil {
-		ty := reflect.TypeOf(data)
-		if !reflect.ValueOf(data).IsZero() && ty.Kind() == reflect.Ptr && ty.Elem() == ser.Type {
-			typeValid = true
+	// Just assume that type is compatibile with what's given
+	/*
+		typeValid := false
+		if data != nil {
+			ty := reflect.TypeOf(data)
+			if !reflect.ValueOf(data).IsZero() && ty.Kind() == reflect.Ptr && ty.Elem() == ser.Type {
+				typeValid = true
+			}
+			if reflect.TypeOf(data) != ser.Type {
+				typeValid = true
+			}
 		}
-		if reflect.TypeOf(data) != ser.Type {
-			typeValid = true
+		if !typeValid {
+			err = &UnsupportedValueError{
+				Val: data,
+			}
+			return
 		}
-	}
-	if !typeValid {
-		err = &UnsupportedValueError{
-			Val: data,
-		}
-		return
-	}
+	*/
 
 	return ser.Serializer.Serialize(data)
 }
 
 func (ser *STPolySerializer) PolyDeserialize(data []byte) (res interface{}, err error) {
-	v := reflect.New(ser.Type)
+	v := reflect.New(ser.Type).Interface()
 
 	err = ser.Deserializer.Deserialize(data, v)
 	if err != nil {
 		return
 	}
 
-	res = v
+	res = reflect.ValueOf(v).Elem().Interface()
 	return
 }
