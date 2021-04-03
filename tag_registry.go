@@ -40,15 +40,6 @@ func (ttr *TagTypeResgistry) RegisterType(ty reflect.Type, et TypeTag) (err erro
 		}
 		return
 	}
-	// with constructor this should never happen
-	/*
-		if ttr.registeredTypes == nil {
-			ttr.registeredTypes = map[TypeTag]reflect.Type{}
-		}
-		if ttr.reverseRegisteredTypes == nil {
-			ttr.reverseRegisteredTypes = map[reflect.Type]TypeTag{}
-		}
-	*/
 	_, ok := ttr.tagToType[et]
 	if ok {
 		err = &TagRegisterError{
