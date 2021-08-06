@@ -24,17 +24,23 @@ type TagDeserializer interface {
 type DefaultTagSerializer struct {
 	Serializer       Serializer
 	Deserializer     Deserializer
-	TagTypeResgistry *TagTypeResgistry
+	TagTypeResgistry *TypeTagRegistry
 
 	// TODO(teaiwthsand): add lock to this type?
 }
 
 func (ds *DefaultTagSerializer) GetTypeTag(data interface{}) (tt TypeTag, err error) {
 	ty := reflect.TypeOf(data)
-	if ty.Kind() == reflect.Ptr {
-		ty = ty.Elem()
-	}
+	// now pointer types are distinct from struct types
+	/*
+		if ty.Kind() == reflect.Ptr {
+			ty = ty.Elem()
+		}
+	*/
 	tt, err = ds.TagTypeResgistry.GetTag(ty)
+	if err != nil {
+		return
+	}
 	return
 }
 

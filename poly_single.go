@@ -4,7 +4,9 @@ import "reflect"
 
 // STPolySerializer is poly serializer and deserializer, which is able to serialize only single type.
 type STPolySerializer struct {
-	Type         reflect.Type
+	Type        reflect.Type       // type of data serializer
+	TypeFactory func() interface{} // OR factory of types to return
+
 	Serializer   Serializer
 	Deserializer Deserializer
 }
@@ -34,13 +36,28 @@ func (ser *STPolySerializer) PolySerialize(data interface{}) (res []byte, err er
 }
 
 func (ser *STPolySerializer) PolyDeserialize(data []byte) (res interface{}, err error) {
-	v := reflect.New(ser.Type).Interface()
+	if ser.TypeFactory != nil {
+		dst := ser.TypeFactory()
+		reflectDst := reflect.TypeOf(dst)
+		if reflectDst.Kind() != reflect.Ptr {
+			panic("type factory must return pointer type")
+		}
+		err = ser.Deserializer.Deserialize(data, dst)
+		if err != nil {
+			return
+		}
 
-	err = ser.Deserializer.Deserialize(data, v)
-	if err != nil {
-		return
+		res = dst
+	} else {
+		v := reflect.New(ser.Type).Interface()
+
+		err = ser.Deserializer.Deserialize(data, v)
+		if err != nil {
+			return
+		}
+
+		res = reflect.ValueOf(v).Elem().Interface()
 	}
 
-	res = reflect.ValueOf(v).Elem().Interface()
 	return
 }

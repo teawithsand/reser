@@ -8,8 +8,10 @@ import (
 	"github.com/teawithsand/reser"
 )
 
-func makePrefixPolySerializer() *reser.PrefixPolySerializer {
-	ttr := makeTTR()
+func makePrefixPolySerializer(ttr *reser.TypeTagRegistry) *reser.PrefixPolySerializer {
+	if ttr == nil {
+		ttr = makeTTR()
+	}
 
 	s := reser.SerializerFunc(json.Marshal)
 	de := reser.DeserializerFunc(json.Unmarshal)
@@ -35,7 +37,7 @@ func Test_PrefixPolySerializer_Serialize(t *testing.T) {
 	v := pt1{
 		ValOne: 42,
 	}
-	s := makePrefixPolySerializer()
+	s := makePrefixPolySerializer(nil)
 	data, err := s.PolySerialize(v)
 	if err != nil {
 		t.Error(err)
@@ -48,6 +50,27 @@ func Test_PrefixPolySerializer_Serialize(t *testing.T) {
 	}
 	actualRes := res.(pt1)
 	if actualRes != v {
+		t.Error("invalid result value")
+	}
+}
+
+func Test_PrefixPolySerializer_SerializePointer(t *testing.T) {
+	v := &pt1{
+		ValOne: 42,
+	}
+	s := makePrefixPolySerializer(makePointerTTR())
+	data, err := s.PolySerialize(v)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	res, err := s.PolyDeserialize(data)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	actualRes := res.(*pt1)
+	if *actualRes != *v {
 		t.Error("invalid result value")
 	}
 }

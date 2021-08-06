@@ -105,7 +105,13 @@ func (ad *adjacentTagString) GetTypeTag() TypeTag {
 	return ad.Type
 }
 
-// TODO(teaiwthsand): bytearray tag support
+type adjacentTagBytes struct {
+	Type []byte
+}
+
+func (ad *adjacentTagBytes) GetTypeTag() TypeTag {
+	return ad.Type
+}
 
 type tagContainer interface {
 	GetTypeTag() TypeTag

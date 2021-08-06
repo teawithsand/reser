@@ -35,3 +35,11 @@ type TypeTagTypeError struct {
 func (e *TypeTagTypeError) Error() string {
 	return "given type tag has invalid type for given registry"
 }
+
+type UnsupportedTypeTagTypeError struct {
+	Type reflect.Type
+}
+
+func (e *UnsupportedTypeTagTypeError) Error() string {
+	return "type tags of specified type are not supported"
+}
