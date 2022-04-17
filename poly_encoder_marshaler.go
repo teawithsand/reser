@@ -15,7 +15,7 @@ func (em *PolyEncoderMarshaler[T]) PolyMarshal(data T) (res []byte, err error) {
 	if err != nil {
 		return
 	}
-	err = e.Encode(data)
+	err = e.PolyEncode(data)
 	if err != nil {
 		return
 	}
@@ -33,7 +33,7 @@ func (em *PolyDecoderUnmarshaler[T]) PolyUnmarshal(data []byte) (res T, err erro
 		return
 	}
 
-	res, err = d.Decode()
+	res, err = d.PolyDecode()
 	if err != nil {
 		return
 	}
