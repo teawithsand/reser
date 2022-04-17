@@ -1,25 +1,25 @@
 package reser
 
-// Serializer, which fits most interfaces exposed by golang already.
+// Marshaler, which fits most interfaces exposed by golang already.
 // For instance, json.Marshal with SerializerFunc.
-type Serializer interface {
+type Marshaler interface {
 	Serialize(data interface{}) (res []byte, err error)
 }
 
-type SerializerFunc func(data interface{}) (res []byte, err error)
+type MarshalerFunc func(data interface{}) (res []byte, err error)
 
-func (f SerializerFunc) Serialize(data interface{}) (res []byte, err error) {
+func (f MarshalerFunc) Serialize(data interface{}) (res []byte, err error) {
 	return f(data)
 }
 
-// Deserializer, which fits most interfaces exposed by golang already.
+// Unmarshaler, which fits most interfaces exposed by golang already.
 // For instance, json.Unmarshal with SerializerFunc.
-type Deserializer interface {
+type Unmarshaler interface {
 	Deserialize(data []byte, dst interface{}) (err error)
 }
 
-type DeserializerFunc func(data []byte, dst interface{}) (err error)
+type UnmarshalerFunc func(data []byte, dst interface{}) (err error)
 
-func (f DeserializerFunc) Deserialize(data []byte, dst interface{}) (err error) {
+func (f UnmarshalerFunc) Deserialize(data []byte, dst interface{}) (err error) {
 	return f(data, dst)
 }
