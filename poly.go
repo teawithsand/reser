@@ -11,7 +11,7 @@ func (f PolyMarshalerFunc[T]) PolyMarshal(data T) (res []byte, err error) {
 	return f(data)
 }
 
-type AnyPolyMarshal = PolyMarshaler[any]
+type AnyPolyMarshaler = PolyMarshaler[any]
 
 // PolyUnmarshaler handles polymorphic deserialization without any external hints about type of data deserialized
 // provided by caller.
