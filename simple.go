@@ -5,6 +5,7 @@ package reser
 type Serializer interface {
 	Serialize(data interface{}) (res []byte, err error)
 }
+
 type SerializerFunc func(data interface{}) (res []byte, err error)
 
 func (f SerializerFunc) Serialize(data interface{}) (res []byte, err error) {
@@ -16,6 +17,7 @@ func (f SerializerFunc) Serialize(data interface{}) (res []byte, err error) {
 type Deserializer interface {
 	Deserialize(data []byte, dst interface{}) (err error)
 }
+
 type DeserializerFunc func(data []byte, dst interface{}) (err error)
 
 func (f DeserializerFunc) Deserialize(data []byte, dst interface{}) (err error) {
