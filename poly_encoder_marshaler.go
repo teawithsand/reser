@@ -6,12 +6,12 @@ import (
 )
 
 type polyEncoderMarshaler[T any] struct {
-	EncoderFactory func(w io.Writer) (PolyEncoder[T], error)
+	encoderFactory func(w io.Writer) (PolyEncoder[T], error)
 }
 
 func (em *polyEncoderMarshaler[T]) PolyMarshal(data T) (res []byte, err error) {
 	b := bytes.NewBuffer(nil)
-	e, err := em.EncoderFactory(b)
+	e, err := em.encoderFactory(b)
 	if err != nil {
 		return
 	}
@@ -24,11 +24,11 @@ func (em *polyEncoderMarshaler[T]) PolyMarshal(data T) (res []byte, err error) {
 }
 
 type polyDecoderUnmarshaler[T any] struct {
-	DecoderFactory func(r io.Reader) (PolyDecoder[T], error)
+	decoderFactory func(r io.Reader) (PolyDecoder[T], error)
 }
 
 func (em *polyDecoderUnmarshaler[T]) PolyUnmarshal(data []byte) (res T, err error) {
-	d, err := em.DecoderFactory(bytes.NewReader(data))
+	d, err := em.decoderFactory(bytes.NewReader(data))
 	if err != nil {
 		return
 	}
@@ -43,14 +43,14 @@ func (em *polyDecoderUnmarshaler[T]) PolyUnmarshal(data []byte) (res T, err erro
 
 func PolyEncoderToMarshaler[T any](encoderFactory func(w io.Writer) (PolyEncoder[T], error)) (marshaler PolyMarshaler[T]) {
 	marshaler = &polyEncoderMarshaler[T]{
-		EncoderFactory: encoderFactory,
+		encoderFactory: encoderFactory,
 	}
 	return
 }
 
 func PolyDecoderToUnmarshaler[T any](decoderFactory func(r io.Reader) (PolyDecoder[T], error)) (marshaler PolyUnmarshaler[T]) {
 	marshaler = &polyDecoderUnmarshaler[T]{
-		DecoderFactory: decoderFactory,
+		decoderFactory: decoderFactory,
 	}
 	return
 }
