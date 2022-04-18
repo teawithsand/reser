@@ -19,6 +19,11 @@ type TypeTagRegistry[T TypeTag] interface {
 	GetTagForType(ty reflect.Type) (tag T, ok bool)
 }
 
+// Creates new default instance of type tag registry.
+func NewTypeTagRegistry[T TypeTag]() *DefaultTypeTagRegistry[T] {
+	return &DefaultTypeTagRegistry[T]{}
+}
+
 // DefaultTypeTagRegistry maps type to type tag and vice versa.
 // Mutating it is not goroutine safe.
 type DefaultTypeTagRegistry[T TypeTag] struct {

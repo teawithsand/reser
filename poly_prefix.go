@@ -7,7 +7,7 @@ import (
 )
 
 type PrefixPolyEncoderFactory[T TypeTag, D any] struct {
-	tagRegistry TypeTagRegistry[T]
+	TagRegistry TypeTagRegistry[T]
 
 	TagEncoderFactory  func(w io.Writer) (e PolyEncoder[T], err error)
 	DataEncoderFactory func(w io.Writer) (e Encoder, err error)
@@ -27,7 +27,7 @@ func (f *PrefixPolyEncoderFactory[T, D]) NewEncoder(w io.Writer) (e PolyEncoder[
 	e = &prefixPolyEncoder[T, D]{
 		tagEncoder:  tagEncoder,
 		dataEncoder: dataEncoder,
-		tagRegistry: f.tagRegistry,
+		tagRegistry: f.TagRegistry,
 	}
 
 	return
@@ -60,13 +60,13 @@ func (ppe *prefixPolyEncoder[T, D]) PolyEncode(data D) (err error) {
 }
 
 type PrefixPolyDecoderFactroy[T TypeTag, D any] struct {
-	tagRegistry TypeTagRegistry[T]
+	TagRegistry TypeTagRegistry[T]
 
 	// Note: this decoder must not read more bytes than required from reader given.
 	TagDecoderFactory func(r io.Reader) (e PolyDecoder[T], err error)
 
 	// Note: this decoder must not read more bytes than required from reader given.
-	DataDecoderFactory func(r io.Reader) (e Decoder, err error)
+	DataDecoderFactory func(r io.Reader) (d Decoder, err error)
 }
 
 func (f *PrefixPolyDecoderFactroy[T, D]) NewDecoder(r io.Reader) (e PolyDecoder[D], err error) {
@@ -83,7 +83,7 @@ func (f *PrefixPolyDecoderFactroy[T, D]) NewDecoder(r io.Reader) (e PolyDecoder[
 	e = &prefixPolyDecoder[T, D]{
 		tagDecoder:  tagDecoder,
 		dataDecoder: dataDecoder,
-		tagRegistry: f.tagRegistry,
+		tagRegistry: f.TagRegistry,
 	}
 
 	return
